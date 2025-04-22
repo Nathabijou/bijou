@@ -806,6 +806,14 @@ section,
   z-index: 1;
 }
 
+.custom-img {
+  max-width: 75%; /* Réduit la taille de l’image */
+  height: auto; /* Garde les proportions */
+  display: block;
+  margin: 0 auto; /* Centre l’image horizontalement si nécessaire */
+}
+
+
 /* .hero .hero-image .shape-2 {
   width: 500px;
   height: 200px;
@@ -882,6 +890,11 @@ section,
 .about .about-image {
   position: relative;
 }
+@media (min-width: 992px) {
+  .about-image img {
+    max-width: 60%;
+  }
+}
 
 .about .about-image img {
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
@@ -897,6 +910,31 @@ section,
     margin-top: 3rem;
   }
 }
+
+
+.custom-about-img {
+  max-width: 70%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.custom-about-img {
+  max-width: 90%; /* Avant c’était 60% */
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+
+
+.about-image img {
+  max-width: 80%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
 
 .about .about-content .subtitle {
   font-size: 0.875rem;
