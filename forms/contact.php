@@ -1,44 +1,55 @@
 <?php
-  /**
-  * Requires the "PHP Email Form" library
-  * The "PHP Email Form" library is available only in the pro version of the template
-  * The library should be uploaded to: vendor/php-email-form/php-email-form.php
-  * For more info and help: https://bootstrapmade.com/php-email-form/
-  */
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
-  // Replace contact@example.com with your real receiving email address
-  $receiving_email_address = 'contact@example.com';
+require 'vendor/autoload.php';  // Assure-toi que le chemin est correct vers ton dossier PHPMailer
 
-  if( file_exists($php_email_form = '../assets/vendor/php-email-form/php-email-form.php' )) {
-    include( $php_email_form );
-  } else {
-    die( 'Unable to load the "PHP Email Form" Library!');
-  }
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Sécurisation des données
+    $name = htmlspecialchars(trim($_POST["name"]));
+    $email = filter_var(trim($_POST["email"]), FILTER_SANITIZE_EMAIL);
+    $subject = htmlspecialchars(trim($_POST["subject"]));
+    $message = htmlspecialchars(trim($_POST["message"]));
 
-  $contact = new PHP_Email_Form;
-  $contact->ajax = true;
-  
-  $contact->to = $receiving_email_address;
-  $contact->from_name = $_POST['name'];
-  $contact->from_email = $_POST['email'];
-  $contact->subject = $_POST['subject'];
+    // Adresse de réception (remplace par la tienne)
+    $to = "nathabijou@mail.com"; // <-- MODIFIE CETTE LIGNE
 
-  // Uncomment below code if you want to use SMTP to send emails. You need to enter your correct SMTP credentials
-  /*
-  $contact->smtp = array(
-    'host' => 'example.com',
-    'username' => 'example',
-    'password' => 'pass',
-    'port' => '587'
-  );
-  */
+    // Création de l'objet PHPMailer
+    $mail = new PHPMailer(true);
 
-  $contact->add_message( $_POST['name'], 'From');
-  $contact->add_message( $_POST['email'], 'Email');
-  if(isset($_POST['phone'])) {
-    $contact->add_message( $_POST['phone'], 'Phone');
-  }
-  $contact->add_message( $_POST['message'], 'Message', 10);
+    try {
+        // Configuration du serveur SMTP
+        $mail->isSMTP();  // Utilise SMTP
+        $mail->Host = 'smtp.gmail.com';  // Serveur SMTP Gmail
+        $mail->SMTPAuth = true;  // Authentification SMTP
+        $mail->Username = 'nathabijou@gmail.com';  // Ton email Gmail
+        $mail->Password = 'ALGOPass1234';  // Ton mot de passe Gmail
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;  // Sécurisation par TLS
+        $mail->Port = 587;  // Port pour TLS
 
-  echo $contact->send();
+        // Expéditeur et destinataire
+        $mail->setFrom($email, 'Nom');
+        $mail->addAddress(nathabijou@gmail.com);  // Ajouter ton adresse de réception
+
+        // Contenu de l'email
+        $mail->isHTML(false);  // Utilisation de texte brut
+        $mail->Subject = "Contact depuis le site : $subject";
+        $mail->Body    = "Vous avez reçu un message depuis le formulaire de contact.\n\n" .
+                         "Nom : $name\n" .
+                         "Email : $email\n\n" .
+                         "Sujet : $subject\n\n" .
+                         "Message :\n$message\n";
+
+                         //ikoa idbi tjar ucmo
+
+        // Envoi de l'email
+        if ($mail->send()) {
+            echo "Message envoyé avec succès.";
+        } else {
+            echo "Erreur lors de l’envoi du message.";
+        }
+    } catch (Exception $e) {
+        echo "Le message n'a pas pu être envoyé. Erreur: {$mail->ErrorInfo}";
+    }
+}
 ?>
